@@ -20,9 +20,7 @@ pip install log-candy
 
 ## Requirements
 
-- Python 3.11.4 or higher
-
-The package may work with older versions of Python, but it has not been tested.
+- Python 3 version or higher is required.
 
 ## Dependencies
 
