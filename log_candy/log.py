@@ -1,3 +1,6 @@
+import json
+from typing import Any
+
 class log_candy:
     DEBUG = '\033[95m'
     INFO = '\033[94m'
@@ -17,6 +20,64 @@ LOG_LEVELS = {
 
 # Current log level (default to DEBUG to show all logs)
 _current_log_level = LOG_LEVELS['DEBUG']
+
+# Formatting configuration
+_compact_objects = True  # Set to False for indented formatting like before
+_compact_threshold = 100  # Objects longer than this use minimal spacing even if compact_objects=False
+
+def set_compact_formatting(enabled: bool = True, threshold: int = 100) -> None:
+    '''Configure object formatting for logging
+    
+    Args:
+        enabled (bool): If True, use compact formatting for all objects.
+                       If False, use indented formatting for readability.
+        threshold (int): For non-compact mode, objects longer than this threshold
+                        will still use compact formatting to avoid excessive output.
+    '''
+    global _compact_objects, _compact_threshold
+    _compact_objects = enabled
+    _compact_threshold = threshold
+
+def get_formatting_settings() -> dict:
+    '''Get current formatting settings
+    
+    Returns:
+        dict: Current formatting configuration
+    '''
+    return {
+        'compact_objects': _compact_objects,
+        'compact_threshold': _compact_threshold
+    }
+
+def _format_message(message: Any) -> str:
+    '''Convert any object to a formatted string for logging
+    
+    Args:
+        message: The object to format
+        
+    Returns:
+        str: The formatted string representation
+    '''
+    if isinstance(message, str):
+        return message
+    elif isinstance(message, (dict, list, tuple, set)):
+        try:
+            if _compact_objects:
+                # Always use compact formatting
+                return json.dumps(message, ensure_ascii=False, default=str, separators=(',', ':'))
+            else:
+                # Use indented formatting, but check threshold for very long objects
+                compact = json.dumps(message, ensure_ascii=False, default=str, separators=(',', ':'))
+                if len(compact) > _compact_threshold:
+                    # Object is too long, use minimal spacing for readability
+                    return json.dumps(message, ensure_ascii=False, default=str, separators=(',', ': '))
+                else:
+                    # Object is reasonable size, use full indentation
+                    return json.dumps(message, indent=2, ensure_ascii=False, default=str)
+        except (TypeError, ValueError):
+            return str(message)
+    else:
+        return str(message)
 
 def set_log_level(level: str) -> None:
     '''Set the minimum log level to display
@@ -50,102 +111,121 @@ def _should_log(level: str) -> bool:
     '''
     return LOG_LEVELS[level] >= _current_log_level    
 
-def log_debug(message: str) -> None:
+def log_debug(message: Any) -> None:
     '''Print a debug message
 
     Args:
-        message (str): The message to print
+        message: The message to print (can be any object type)
     '''
     if not _should_log('DEBUG'):
         return
 
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
     # Replace newlines with newlines and spaces
-    message = message.replace("\n", "\n" + " " * len('[DEBUG] '))
+    formatted_message = formatted_message.replace("\n", "\n" + " " * len('[DEBUG] '))
 
     # Print the message
-    print(f"{log_candy.DEBUG}[DEBUG] {message}{log_candy.ENDC}")
+    print(f"{log_candy.DEBUG}[DEBUG] {formatted_message}{log_candy.ENDC}")
 
-def log_info(message: str) -> None:
+def log_info(message: Any) -> None:
     '''Print an info message
 
     Args:
-        message (str): The message to print
+        message: The message to print (can be any object type)
     '''
     if not _should_log('INFO'):
         return
 
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
     # Replace newlines with newlines and spaces
-    message = message.replace("\n", "\n" + " " * len('[INFO] '))
+    formatted_message = formatted_message.replace("\n", "\n" + " " * len('[INFO] '))
 
     # Print the message
-    print(f"{log_candy.INFO}[INFO] {message}{log_candy.ENDC}")
+    print(f"{log_candy.INFO}[INFO] {formatted_message}{log_candy.ENDC}")
 
-def log_result(message: str) -> None:
+def log_result(message: Any) -> None:
     '''Print a result message
 
     Args:
-        message (str): The message to print
+        message: The message to print (can be any object type)
     '''
     if not _should_log('RESULT'):
         return
     
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
     # Replace newlines with newlines and spaces
-    message = message.replace("\n", "\n" + " " * len('[RESULT] '))
+    formatted_message = formatted_message.replace("\n", "\n" + " " * len('[RESULT] '))
 
     # Print the message
-    print(f"{log_candy.RESULT}[RESULT] {message}{log_candy.ENDC}")
+    print(f"{log_candy.RESULT}[RESULT] {formatted_message}{log_candy.ENDC}")
 
-def log_warning(message: str) -> None:
+def log_warning(message: Any) -> None:
     '''Print a warning message
 
     Args:
-        message (str): The message to print
+        message: The message to print (can be any object type)
     '''
     if not _should_log('WARNING'):
         return
 
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
     # Replace newlines with newlines and spaces
-    message = message.replace("\n", "\n" + " " * len('[WARNING] '))
+    formatted_message = formatted_message.replace("\n", "\n" + " " * len('[WARNING] '))
 
     # Print the message
-    print(f"{log_candy.WARNING}[WARNING] {message}{log_candy.ENDC}")
+    print(f"{log_candy.WARNING}[WARNING] {formatted_message}{log_candy.ENDC}")
 
-def log_error(message: str) -> None:
+def log_error(message: Any) -> None:
     '''Print an error message
 
     Args:
-        message (str): The message to print
+        message: The message to print (can be any object type)
     '''
     if not _should_log('ERROR'):
         return
 
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
     # Replace newlines with newlines and spaces
-    message = message.replace("\n", "\n" + " " * len('[ERROR] '))
+    formatted_message = formatted_message.replace("\n", "\n" + " " * len('[ERROR] '))
 
     # Print the message
-    print(f"{log_candy.ERROR}[ERROR] {message}{log_candy.ENDC}")
+    print(f"{log_candy.ERROR}[ERROR] {formatted_message}{log_candy.ENDC}")
 
-def tqdm_info(message: str) -> str:
+def tqdm_info(message: Any) -> str:
     '''Return an info message for tqdm
 
     Args:
-        message (str): The message to return
+        message: The message to return (can be any object type)
 
     Returns:
         str: The formatted message
     '''
+    # Convert message to string
+    formatted_message = _format_message(message)
+    
+    return f"{log_candy.INFO}[INFO] {formatted_message}"
 
-    return f"{log_candy.INFO}[INFO] {message}"
-
-def input_debug(message: str) -> str:
+def input_debug(message: Any) -> str:
     '''Return an input message for debugging
 
     Args:
-        message (str): The message to return
+        message: The message to display (can be any object type)
 
     Returns:
-        str: The formatted message
+        str: The user input
     '''
+    # Convert message to string
+    formatted_message = _format_message(message)
     
-    return input(f"{log_candy.DEBUG}[INPUT DEBUG] {message}{log_candy.ENDC}")
+    return input(f"{log_candy.DEBUG}[INPUT DEBUG] {formatted_message}{log_candy.ENDC}")
 

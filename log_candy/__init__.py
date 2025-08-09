@@ -8,5 +8,7 @@ from .log import (
     input_debug,
     set_log_level,
     get_log_level,
+    set_compact_formatting,
+    get_formatting_settings,
     LOG_LEVELS
 )
