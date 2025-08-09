@@ -1,6 +1,6 @@
 # 🍭 Log Candy
 
-[![PyPI version](https://badge.fury.io/py/log-candy.svg)](https://badge.fury.io/py/log-candy)
+[![PyPI version](https://img.shields.io/pypi/v/log-candy.svg)](https://pypi.org/project/log-candy/)
 [![Python version](https://img.shields.io/pypi/pyversions/log-candy.svg)](https://pypi.org/project/log-candy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
