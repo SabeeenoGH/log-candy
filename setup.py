@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='log-candy',
-    version='0.1.0',
+    version='0.1.3',
     description='A simple Python logging utility for colorful terminal output',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -15,5 +15,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.x'
+    python_requires='>=3.6'
 )

@@ -8,6 +8,8 @@ Log Candy is a simple and colorful logging utility designed to make your debug m
 
 - 📝 **Readable Formatting**: Automatically formats multiline messages for improved readability.
 
+- 🎚️ **Log Level Control**: Set minimum log levels to filter out less important messages and reduce noise.
+
 - 🛠️ **Customizable Use**: Straightforward integration to be used anywhere in your Python projects.
 
 ## Installation
@@ -52,6 +54,36 @@ log_error("This is an error message.\nThis is a multiline error message.")
 log_result("This is a result message.\nThis is a multiline result message.")
 ```
 
+### Log Levels
+
+You can control which logs are displayed by setting a minimum log level. Only logs at or above the set level will be shown:
+
+```python
+from log_candy import set_log_level, get_log_level, LOG_LEVELS
+
+# Set log level to show only warnings and errors
+set_log_level('WARNING')
+
+log_debug("This won't be shown")        # Hidden
+log_info("This won't be shown")         # Hidden
+log_warning("This will be shown")       # Visible
+log_error("This will be shown")         # Visible
+
+# Check current log level
+current_level = get_log_level()
+print(f"Current log level: {current_level}")
+
+# Available log levels (in order of priority):
+# DEBUG (10) - Shows all logs
+# INFO (20) - Shows info, result, warning, and error logs
+# RESULT (25) - Shows result, warning, and error logs  
+# WARNING (30) - Shows warning and error logs
+# ERROR (40) - Shows only error logs
+
+# You can also access the LOG_LEVELS dictionary
+print("Available levels:", LOG_LEVELS)
+```
+
 ## Why Use Log Candy?
 
 - 🛠 **Ease of Use**: No setup required, just import and start logging.
@@ -59,6 +91,8 @@ log_result("This is a result message.\nThis is a multiline result message.")
 - 🌟 **Improved Clarity**: Quickly identify different types of logs by their color-coded format.
 
 - 💡 **Multiline Support**: Automatically indents subsequent lines to keep your logs neat.
+
+- 🎯 **Focused Debugging**: Use log levels to show only the information you need, when you need it.
 
 ## Contributing
 
