@@ -40,7 +40,7 @@ def get_log_level() -> str:
     for level_name, level_value in LOG_LEVELS.items():
         if level_value == _current_log_level:
             return level_name
-    return 'DEBUG'  # fallback
+    return 'DEBUG'
 
 def _should_log(level: str) -> bool:
     '''Check if a message with the given level should be logged
